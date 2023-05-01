@@ -1,8 +1,11 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+
+from .forms import UserUpdateForm, ProfileUpdateForm, PostForm
 from .utils import get_post_and_liked_users
 from .models import Post, Profile
 from django.utils import timezone
@@ -12,7 +15,7 @@ from django.urls import reverse
 # lista de todos os posts
 @login_required(login_url='feed/login')
 def post_list(request):
-    posts = Post.objects.all()
+    posts = Post.objects.order_by('-created_at')
     return render(request, 'post_detail.html', {'posts': posts})
 
 
@@ -24,7 +27,7 @@ def users_list(request):
 
 
 # lista de posts de um utilizador
-@login_required(login_url='login')
+@login_required(login_url='feed/login')
 def profile(request, username):
     user_profile = get_object_or_404(Profile, user__username=username)
     post = Post.objects.filter(user=user_profile.user).order_by('-created_at')
@@ -48,19 +51,45 @@ def like_post(request, post_id):
     return JsonResponse({'success': False})
 
 
+# perfil de quem deu login
+@login_required(login_url='feed/login')
+def myProfile(request):
+    user = request.user
+    posts = Post.objects.filter(user=user).order_by('-created_at')
+    return render(request, 'selfProfile.html', {'user': user, 'posts': posts})
+
+
+@login_required(login_url='feed/login')
+def edit_profile(request):
+    profile = request.user.profile
+    if request.method == 'POST':
+        user_form = UserUpdateForm(request.POST, instance=request.user)
+        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Your profile has been updated!')
+            return redirect('feed:myProfile')
+    else:
+        user_form = UserUpdateForm(instance=request.user)
+        profile_form = ProfileUpdateForm(instance=profile)
+    return render(request, 'edit_profile.html', {'user_form': user_form, 'profile_form': profile_form})
 
 
 # adicionar um post
+@login_required(login_url='feed/login')
 def criar_post(request):
     if request.method == 'POST':
-        try:
-            content = request.POST.get("image")
-        except KeyError:
-            return render(request, 'feed/criar_post.html')
-        if content:
-            post = Post(content=content, created_at=timezone.now())
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.user = request.user
+            post.created_at = timezone.now()
             post.save()
-
+            return redirect('feed:myProfile')
+    else:
+        form = PostForm()
+    return render(request, 'criar_post.html', {'form': form})
 
 # criar um user novo
 def criarUser(request):
@@ -88,7 +117,6 @@ def criarUser(request):
         return render(request, 'criarProfile.html')
 
 
-
 def loginview(request):
     if request.method == 'POST':
         try:
@@ -108,7 +136,7 @@ def loginview(request):
         return render(request, 'login.html')
 
 
-@login_required(login_url='login')
+@login_required(login_url='feed/login')
 def logoutview(request):
     logout(request)
-    return HttpResponseRedirect(reverse('login'))
+    return HttpResponseRedirect(reverse('feed:login'))
