@@ -7,6 +7,8 @@ urlpatterns = [
 
     path('feed/login/', views.loginview, name='login'),
 
+    path('feed/criarProfile/', views.criarUser, name='criarUser'),
+
     path('logout/', views.logoutview, name='logout'),
 
     path('lista', views.users_list, name="users_list"),

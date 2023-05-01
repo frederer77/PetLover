@@ -62,6 +62,32 @@ def criar_post(request):
             post.save()
 
 
+# criar um user novo
+def criarUser(request):
+    if request.method == 'POST':
+        try:
+            fnome = request.POST.get('fnome')
+            lnome = request.POST.get('lnome')
+            username = request.POST.get('username')
+            email = request.POST.get('email')
+            password = request.POST.get('password')
+        except KeyError:
+            return render(request, 'criarProfile.html')
+
+        if fnome and lnome and username and email and password:
+            user = User.objects.create_user(username, email, password)
+            user.first_name = fnome
+            user.last_name = lnome
+            user.save()
+            usuario = Profile.objects.create(user=user)
+            usuario.save()
+            return HttpResponseRedirect(reverse('feed:post_detail'))
+        else:
+            return HttpResponseRedirect(reverse('feed:criarUser'))
+    else:
+        return render(request, 'criarProfile.html')
+
+
 
 def loginview(request):
     if request.method == 'POST':
@@ -77,8 +103,7 @@ def loginview(request):
                 login(request, user)
                 return HttpResponseRedirect(reverse('feed:post_detail'))
             else:
-                #pagina de criar conta
-                return HttpResponseRedirect(reverse('feed:users_list'))
+                return HttpResponseRedirect(reverse('feed:criarUser'))
     else:
         return render(request, 'login.html')
 
