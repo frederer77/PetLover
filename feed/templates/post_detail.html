@@ -1,0 +1,29 @@
+
+<head>
+	<title>Post List</title>
+</head>
+<body>
+	<h1>Post List</h1>
+	<ul>
+	{% for post in posts %}
+        <div>
+        <h3><a href="{% url 'feed:profile' username=post.user.username %}">{{ post.user.username }}</a></h3>
+        <img src="{{ post.content.url }}" alt="Post Image">
+        <button id="like-btn">Like</button>
+
+            <script>
+                $(document).ready(function() {
+                    $('#like-btn').click(function() {
+                        $.post('/like/{{ post.id }}/', function(data) {
+                            if (data.success) {
+                               $('#like-btn').text('Liked');
+                            }
+                        });
+                    });
+                });
+            </script>
+        </div>
+	{% endfor %}
+	</ul>
+</body>
+

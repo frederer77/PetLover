@@ -1,0 +1,28 @@
+{% block content %}
+<section class="modal">
+
+  <h1>Login</h1>
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages.error %}
+        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}> {{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <form class="login_form" action="{% url 'feed:login' %}" method="post">
+    {% csrf_token %}
+    <p>
+      <label class="lbl1" for="nome">Username:</label>
+       <input type="text" id="nome" name="nome" placeholder="user" required/> <br/> <br/>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" placeholder="******" required/>
+    </p>
+    <input class="btn" type="submit" value="Login" />
+{#    <button class="btn" onclick="window.location.href='{% url 'votacao:criarAluno' %}'" type="button"> Criar conta </button>#}
+
+  </form>
+  <br/>
+
+</section>
+{% endblock %}

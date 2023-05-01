@@ -1,0 +1,42 @@
+{% block content %}
+
+{#{% include 'votacao/snippets/nav.html' %}#}
+
+<form method="post">
+  {% csrf_token %}
+  <p>
+      <label for="fnome">First Name:</label>
+      <input name="nome" id="fnome" required type="text"/> <br/>
+      <label for="lnome">Last Name:</label>
+      <input name="nome" id="lnome" required type="text"/> <br/>
+      
+      <label for="email">E-mail:</label>
+      <input type="email" id="email" name="email" /> <br/>
+      <label for="password">Password:</label>
+    Curso:  <input type="text" name="curso"/> <br/>
+    Password:  <input type="Password" name="password" /> <br/>
+    Comentário: <input type="text" id="comment" name="comment" required>
+  </p>
+  <script>
+    function validar(){
+    const comentario = document.getElementById("comment").value;
+    const forbiden = ["tatibitate", "abécula", "abentesma",
+        "achavascado", "alimária", "adrajoso", "barregã",
+        "biltre", "cacóstomo", "cuarra", "estólido", "estroso",
+        "estutilóquio", "nefelibata", "néscio", "pechenga", "sevandija",
+        "somítico", "xexé", "cheché", "xexelento"];
+    for(let palavra of forbiden){
+        if(comentario.includes(palavra)){
+            document.getElementById("comment").value = "";
+            document.getElementById("accepted").value = "";
+            alert("O comentário não pode conter a palavra " + palavra + " por considerarmos insultuosa");
+            return;
+        }
+    }
+    document.getElementById("accepted").value = "Comentário aceite";
+}
+  </script>
+  <button type="submit" onclick="validar()">Criar Conta</button>
+  <span id="accepted"></span>
+</form>
+{% endblock %}
