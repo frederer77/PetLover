@@ -1,14 +1,22 @@
-{% block content %}
-<section class="modal">
+{% load static %}
 
-  <h1>Login</h1>
-  {% if messages %}
-    <ul class="messages">
-      {% for message in messages.error %}
-        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}> {{ message }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+
+{% block content %}
+<div class="register-container">
+    <div class="logo">
+        <img src="{% static 'media/logo.jpeg' %}" alt="logo" >
+    </div>
+    <div class="divider"></div>
+    <div class="form-container">
+          {% if messages %}
+            <ul class="messages">
+              {% for message in messages.error %}
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}> {{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
 
   <form class="login_form" action="{% url 'feed:login' %}" method="post">
     {% csrf_token %}
@@ -18,11 +26,11 @@
       <label for="password">Password:</label>
       <input type="password" id="password" name="password" placeholder="******" required/>
     </p>
-    <input class="btn" type="submit" value="Login" />
-    <button class="btn" onclick="window.location.href='{% url 'feed:criarUser' %}'" type="button"> Criar conta </button>
-
+      <input class="btn" type="submit" value="Login" /> <br><br>
+      Não tem conta? <a href='{% url 'feed:criarUser' %}'> <span class="blue-text">Registe-se</span></a>
   </form>
   <br/>
+        </div>
 
-</section>
+    </div>
 {% endblock %}

@@ -6,7 +6,6 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.ImageField(upload_to='post_images/')
     description = models.TextField(blank=True)
-    likes = models.ManyToManyField(User, related_name='likes')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -30,14 +29,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.content[:50]
-
-
-class Follow(models.Model):
-    follower = models.ForeignKey(User, related_name='following', on_delete=models.CASCADE)
-    following = models.ForeignKey(User, related_name='followers', on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = ('follower', 'following')
-
-    def __str__(self):
-        return f'{self.follower.username} follows {self.following.username}'

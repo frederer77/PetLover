@@ -1,52 +1,53 @@
+{% include 'snippets/icons.html' %}
 
 {% load static %}
-{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
 
-      <div>
-    {% if not user.is_superuser %}
-        {% if not user.profile.profile_picture %}
-                <img class="profile" src="{% static 'media/default.png' %}" style="max-width: 200px; max-height: 200px" alt="default">
-        {% else %}
-            <img src="{% static user.profile.profile_picture %}" alt="{{ user.username }}'s profile image"
-                 style="max-width: 200px;">
-        {% endif %}
-    {% else %}
-        <img class="profile" src="{% static 'media/default.png' %}" style="max-width: 200px; max-height: 200px" alt="default">
-    {% endif %}
+<div class="grid-container">
+
+<div class="icons">
+    {% include 'snippets/icons.html' %}
 </div>
-<span id="info">
-    <p>Nome: {{ user.first_name }} {{ user.last_name }}</p>
-    <p>Username: {{ user.username }}</p>
-    <p>Email: {{ user.email }}</p>
 
-    {% if not user.profile.bio %}
-        <a href="{% url 'feed:edit_profile' %}">Add a Bio</a>
-    {% else %}
-        <p>Bio: {{ user.profile.bio }}</p>
-    {% endif %}
-
-</span>
-<br>
-    <a href="{% url 'feed:edit_profile' %}">Edit Profile</a>
-    <section>
-        {% for post in posts %}
-            {% if not post.content %}
-                <h3>U still don't have any posts</h3>
-                <a href="{% url 'feed:criar_post' %}">+</a>
+    <div class="feed">
+        {% if not user.is_superuser %}
+            {% if not user.profile.profile_picture %}
+                    <img class="profile" src="{% static 'media/default.png' %}" style="max-width: 200px; max-height: 200px" alt="default">
             {% else %}
-                <div>
-                <img src="{{ post.content.url }}" alt="Post Image" width="200">
-                    <p>{{ post.description }}</p>
-                </div>
+                <img class="profile" src="{{ user.profile.profile_picture.url }}" alt="{{ user.username }}'s profile image"
+                     style="max-width: 200px;">
             {% endif %}
-        {% endfor %}
+        {% else %}
+            <img class="profile" src="{% static 'media/default.png' %}" style="max-width: 200px; max-height: 200px" alt="default">
+        {% endif %}
+        <span id="info">
+            <p class="inf">Nome: {{ user.first_name }} {{ user.last_name }}</p>
+            <p class="inf">Username: {{ user.username }}</p>
+            <p class="inf">Email: {{ user.email }}</p>
 
-</section>
+            {% if not user.is_superuser %}
+                {% if not user.profile.bio %}
+                    <p class="inf">Bio: None, add a Bio</p>
+                {% else %}
+                    <p class="inf">Bio: {{ user.profile.bio }}</p>
+                {% endif %}
+                <a class="edit" href="{% url 'feed:edit_profile' %}">Edit Profile</a>
+            {% endif %}
+        </span>
+        <br>
+        <section class="po">
+            {% for post in posts %}
+                {% if not post.content %}
+                    <h3>U still don't have any posts</h3>
+                    <a href="{% url 'feed:criar_post' %}">+</a>
+                {% else %}
+                    <div>
+                    <img src="{{ post.content.url }}" alt="Post Image" width="200">
+                        <p>{{ post.description }}</p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </section>
+    </div>
 
-
-
-
-
-
-
-{% endblock %}
+</div>

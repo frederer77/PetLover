@@ -1,9 +1,22 @@
+{% load static %}
 
 
 
+<div class="icn">
+    <div class="botao logo-button" onclick="window.location.href='{% url 'feed:post_detail' %}'"> <img src="{% static 'media/logo.png' %}" alt="logo" width="90px"> </div><br>
 
-<section>
-    <button class="btn" onclick="window.location.href='{% url 'feed:myProfile' %}'" type="button"> Profile </button>
-    <button class="btn" onclick="window.location.href='{% url 'feed:criar_post' %}'" type="button"> +</button>
-    <button class="btn" onclick="window.location.href='{% url 'feed:logout' %}'" type="button">log out</button>
-</section>
+    <div class="botao profile-button" onclick="window.location.href='{% url 'feed:myProfile' %}'">
+        <img src="{% static 'media/default.png' %}" alt="logo_profile">
+        Profile
+    </div>
+    <br>
+
+    {% if not request.user.is_superuser %}
+        <div class="botao plus-button" onclick="window.location.href='{% url 'feed:criar_post' %}'"> +</div> <br>
+    {% endif %}
+
+    <div class="botao home-button" onclick="window.location.href='{% url 'feed:post_detail' %}'">
+        Feed</div><br>
+    <div class="botao logout-button" onclick="window.location.href='{% url 'feed:logout' %}'">log out</div><br>
+
+</div>

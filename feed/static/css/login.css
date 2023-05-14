@@ -1,0 +1,416 @@
+body {
+}
+/* páginas de login e registo */
+
+.register-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.logo {
+  flex: 2;
+  margin-right: 5px;
+}
+
+.logo img {
+  max-width: 100%;
+  height: auto;
+}
+
+.divider {
+  height: 100%;
+  width: 2px;
+  margin: auto 20px;
+  background-color: #ccc;
+}
+
+.form-container {
+  flex: 3;
+  padding: 20px;
+}
+
+.login_form {
+  width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f8f8f8;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.lbl1 {
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  box-sizing: border-box;
+}
+
+.btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+.blue-text {
+  color: blue;
+  font-weight: bold;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.blue-text {
+  color: #1C8C96;
+}
+
+
+.like-btn {
+    background-color: gray;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+.like-btn.liked {
+    background-color: red;
+    color: white;
+}
+
+.profile{
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* estrutura grid 3 */
+.grid-container{
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+
+/* secção dos botões*/
+.icons{
+    width: 250px;
+}
+.icn{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100vh;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+.botao{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  transition: color 0.3s;
+}
+
+
+.logout-button:hover {
+  color: #ff0000; /* Red color on hover */
+}
+
+.logo-button {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* Profile button */
+.profile-button {
+  display: flex;
+  align-items: center;
+}
+.profile-button img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+.plus-button {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* Logout button */
+.logout-button {
+  position: relative;
+}
+
+.logout-button::after {
+  content: 'Are you sure?';
+  position: absolute;
+  background-color: #ff0000;
+  color: #fff;
+  padding: 5px;
+  font-size: 12px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+
+.logout-button:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Search button */
+.search-button {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* Home button */
+.home-button {
+  display: flex;
+  align-items: center;
+}
+
+.home-button img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+
+/* secção do feed */
+.post {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.delete-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #ff0000;
+  text-decoration: none;
+}
+
+.profile-name {
+  text-decoration: none;
+  color: #555;
+  transition: color 0.3s ease-in-out;
+}
+
+.profile-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.profile-name {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: #f1f1f1;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.delete-button:hover,
+.profile-name a:hover {
+  text-decoration: none; /* Add this line to remove underline */
+}
+
+.post-image {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.post-image:hover {
+  transform: scale(1.02);
+}
+
+.view-comments {
+  font-size: 14px;
+  color: #999;
+  text-decoration: none;
+  margin-bottom: 10px;
+  transition: color 0.3s ease-in-out;
+}
+
+.view-comments:hover {
+  text-decoration: underline;
+}
+
+/* Additional Styles for Enhanced Visual Appeal */
+
+.post {
+  max-width: 600px;
+  position: relative;
+  overflow: hidden;
+}
+
+
+.post-image {
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.post-image:hover {
+  transform: scale(1.02);
+}
+
+/* users list */
+.users-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.user-item:last-child {
+  border-bottom: none;
+}
+
+.user-name {
+  margin: 0;
+  font-size: 16px;
+  flex-grow: 1;
+}
+
+.x-button {
+  margin-left: 10px;
+  padding: 4px 8px;
+  background-color: #ff0000;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.x-button:hover {
+  background-color: #cc0000;
+  text-decoration: none;
+}
+
+/* create a post */
+.post-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.post-form label {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.post-form input[type="file"],
+.post-form textarea {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.post-form button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.post-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Self profile */
+
+.profile {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+#info .inf {
+  margin: 5px 0;
+}
+
+#info .edit {
+    color: #007bff;
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
+}
+
+#info .edit:hover {
+  text-decoration: none;
+  color: #0056b3;
+}
+
+.po {
+  margin-top: 20px;
+}
+
+.po div {
+  margin-bottom: 20px;
+}
+
+.po img {
+  width: 200px;
+  margin-bottom: 10px;
+}
+
+.po p {
+  margin: 5px 0;
+}

@@ -4,26 +4,50 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.http import require_POST
 
 from .forms import UserUpdateForm, ProfileUpdateForm, PostForm
-from .utils import get_post_and_liked_users
-from .models import Post, Profile
+from .models import Post, Profile, Comment
 from django.utils import timezone
 from django.urls import reverse
+from .forms import CommentForm
 
 
 # lista de todos os posts
 @login_required(login_url='feed/login')
 def post_list(request):
     posts = Post.objects.order_by('-created_at')
-    return render(request, 'post_detail.html', {'posts': posts})
-
-
-# lista de todos os users
-@login_required(login_url='feed/login')
-def users_list(request):
     users = Profile.objects.all()
-    return render(request, 'lista_users.html', {'list': users})
+    return render(request, 'post_detail.html', {'posts': posts, 'users': users, 'current_user': request.user})
+
+
+# apagar um user
+@login_required(login_url='feed/login')
+def delete_user(request, user_id):
+    if request.user.is_superuser:
+        user = User.objects.get(id=user_id)
+        user.delete()
+    return redirect('feed:post_detail')
+
+
+# apagar um post
+@login_required
+def delete_post(request, post_id):
+    if request.user.is_superuser:
+        post = get_object_or_404(Post, id=post_id)
+        post.delete()
+    return redirect('feed:post_detail')
+
+
+# apagar um comentário
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    # Check if the user is a superuser or the owner of the comment
+    if request.user.is_superuser or request.user == comment.user:
+        comment.delete()
+
+    return redirect('feed:post_comments', post_id=comment.post.id)
 
 
 # lista de posts de um utilizador
@@ -35,20 +59,33 @@ def profile(request, username):
     return render(request, 'user_profile.html', context)
 
 
-# lista de likes de um post
-def post_detail(request, post_id):
-    post, liked_users = get_post_and_liked_users(post_id)
-    context = {'post': post, 'liked_users': liked_users}
-    return render(request, 'post_detail.html', context)
-
-
-# user dá like num post
-def like_post(request, post_id):
+# comentários de um post
+@login_required(login_url='feed/login')
+def post_comments(request, post_id):
     post = get_object_or_404(Post, id=post_id)
+    comments = post.comments.select_related('user__profile').order_by('-created_at')
+
     if request.method == 'POST':
-        post.likes.add(request.user)
-        return JsonResponse({'success': True})
-    return JsonResponse({'success': False})
+        content = request.POST.get('content')
+        if content:
+            comment = Comment(post=post, user=request.user, content=content)
+            comment.save()
+
+    return render(request, 'post_comments.html', {'post': post, 'comments': comments})
+
+
+# adicionar um comentário
+@login_required(login_url='feed/login')
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        if content:
+            comment = Comment(post=post, user=request.user, content=content)
+            comment.save()
+
+    return redirect('feed:post_comments', post_id=post.id)
 
 
 # perfil de quem deu login
@@ -59,6 +96,7 @@ def myProfile(request):
     return render(request, 'selfProfile.html', {'user': user, 'posts': posts})
 
 
+# editar o profile
 @login_required(login_url='feed/login')
 def edit_profile(request):
     profile = request.user.profile
@@ -76,7 +114,7 @@ def edit_profile(request):
     return render(request, 'edit_profile.html', {'user_form': user_form, 'profile_form': profile_form})
 
 
-# adicionar um post
+# criar um post
 @login_required(login_url='feed/login')
 def criar_post(request):
     if request.method == 'POST':
@@ -90,6 +128,7 @@ def criar_post(request):
     else:
         form = PostForm()
     return render(request, 'criar_post.html', {'form': form})
+
 
 # criar um user novo
 def criarUser(request):
@@ -110,13 +149,14 @@ def criarUser(request):
             user.save()
             usuario = Profile.objects.create(user=user)
             usuario.save()
-            return HttpResponseRedirect(reverse('feed:post_detail'))
+            return HttpResponseRedirect(reverse('feed:login'))
         else:
             return HttpResponseRedirect(reverse('feed:criarUser'))
     else:
         return render(request, 'criarProfile.html')
 
 
+#login view
 def loginview(request):
     if request.method == 'POST':
         try:
@@ -131,11 +171,12 @@ def loginview(request):
                 login(request, user)
                 return HttpResponseRedirect(reverse('feed:post_detail'))
             else:
-                return HttpResponseRedirect(reverse('feed:criarUser'))
+                return HttpResponseRedirect(reverse('feed:login'))
     else:
         return render(request, 'login.html')
 
 
+#logout
 @login_required(login_url='feed/login')
 def logoutview(request):
     logout(request)

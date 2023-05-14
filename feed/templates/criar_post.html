@@ -1,7 +1,16 @@
+{% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
 
+<div class="grid-container">
+<div class="icons">
+    {% include 'snippets/icons.html' %}
+</div>
 
-<form method="post" enctype="multipart/form-data">
+    <div class="feed">
+<form class="post-form" method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form.as_p }}
   <button type="submit">Create Post</button>
 </form>
+    </div>
+</div>

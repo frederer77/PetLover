@@ -1,33 +1,48 @@
-{% include 'snippets/icons.html' %}
 
 
-<head>
-	<title>Post List</title>
-</head>
-<body>
+{% load static %}
+
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+
+<div class="grid-container">
+<div class="icons">
+    {% include 'snippets/icons.html' %}
+</div>
+
+<div class="feed">
 	<h1>Post List</h1>
 	<ul>
 	{% for post in posts %}
-        <div>
-        <h3><a href="{% url 'feed:profile' username=post.user.username %}">{{ post.user.username }}</a></h3>
-        <img src="{{ post.content.url }}" alt="Post Image">
-        <button id="like-btn">Like</button>
-
-            <script>
-                $(document).ready(function() {
-                    $('#like-btn').click(function() {
-                        $.post('/like/{{ post.id }}/', function(data) {
-                            if (data.success) {
-                               $('#like-btn').text('Liked');
-                            }
-                        });
-                    });
-                });
-            </script>
+        {% if post.user == user %}
+            <div class="post">
+            <h3 class="profile-name"><a href="{% url 'feed:myProfile' %}">{{ post.user.username }}</a></h3>
+            <img class="post-image" src="{{ post.content.url }}" alt="Post Image" width="200">
+            <a class="view-comments" href="{% url 'feed:post_comments' post.id %}">Ver {{ post.comments.count }} comentários</a><br>
+            <h4 class="post-description">{{ post.description }}</h4>
+            </div><br>
+        {% else %}
+            <div class="post">
+            {% if request.user.is_superuser %}
+                <a href="{% url 'feed:delete_post' post_id=post.id %}" class="delete-button">Delete</a>
+            {% endif %}
+            <h3 class="profile-name"><a href="{% url 'feed:profile' username=post.user.username %}">{{ post.user.username }}</a></h3>
+            <img class="post-image" src="{{ post.content.url }}" alt="Post Image" width="200">
+                <a class="view-comments" href="{% url 'feed:post_comments' post.id %}">Ver {{ post.comments.count }} comentários</a><br>
+                <h4 class="post-description">{{ post.description }}</h4>
         </div>
+            <br>
+        {% endif %}
+        {% empty %}
+            <h3>No one posted anything yet</h3>
 	{% endfor %}
 	</ul>
 
 
-</body>
+</div>
 
+<div class="users-list">
+    {% include 'snippets/lista_users.html' %}
+</div>
+
+</div>

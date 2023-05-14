@@ -1,0 +1,17 @@
+	<h1>Users List</h1>
+	<ul class="users-list">
+	{% for user in users %}
+        <li class="user-item">
+        {% if user.user == request.user %}
+            <h3 class="user-name"><a href="{% url 'feed:myProfile' %}">{{ user.user.username }}</a></h3>
+        {% elif user != user.user %}
+            <h3 class="user-name"><a href="{% url 'feed:profile' username=user.user.username  %}">{{ user.user.username }}</a></h3>
+        {% endif %}
+        {% if request.user.is_superuser %}
+            <a class="x-button" href="{% url 'feed:delete_user' user_id=user.user.id %}">Delete</a>
+        {% endif %}
+        </li>
+    {% empty %}
+        <li>No users found</li>
+    {% endfor %}
+	</ul>
